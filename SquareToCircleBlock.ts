@@ -3,6 +3,8 @@ const h : number = window.innerHeight
 class SquareToCircleBlock {
     private div : HTMLDivElement = document.createElement('div')
     private size : number = Math.min(w,h)/10
+    private animator : Animator = new Animator()
+    private state : State = new State()
     constructor() {
         this.initBlock()
     }
@@ -13,7 +15,17 @@ class SquareToCircleBlock {
         document.body.appendChild(this.div)
     }
     update() {
-
+        this.div.style.borderRadius = `${this.state.scale * 50}%`
+        this.state.update(() => {
+            this.animator.stop()
+        })
+    }
+    handleTap() {
+        this.div.onmousedown = () => {
+            this.animator.start(()=> {
+                this.update()
+            })
+        }
     }
 }
 
@@ -23,9 +35,15 @@ class State {
     update(stopcb : Function) {
         this.deg += Math.PI/20
         this.scale = Math.sin(this.deg)
-        if (this.deg > Math.PI) {
-            this.deg = 0
-            this.scale = 0
+        if (this.deg > Math.PI/2 || this.deg > Math.PI) {
+            if (this.deg > Math.PI) {
+                this.deg = 0
+                this.scale = 0
+            }
+            else {
+                this.deg = Math.PI/2
+                this.scale = 1
+            }
             stopcb()
         }
     }
