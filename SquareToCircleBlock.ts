@@ -13,6 +13,20 @@ class SquareToCircleBlock {
         document.body.appendChild(this.div)
     }
     update() {
-        
+
+    }
+}
+
+class State {
+    private deg : number = 0
+    public scale : number = 0
+    update(stopcb : Function) {
+        this.deg += Math.PI/20
+        this.scale = Math.sin(this.deg)
+        if (this.deg > Math.PI) {
+            this.deg = 0
+            this.scale = 0
+            stopcb()
+        }
     }
 }
