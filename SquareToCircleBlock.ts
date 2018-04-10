@@ -32,17 +32,20 @@ class SquareToCircleBlock {
 class State {
     private deg : number = 0
     public scale : number = 0
+    private mode : number = 0
     update(stopcb : Function) {
         this.deg += Math.PI/20
         this.scale = Math.sin(this.deg)
-        if (this.deg > Math.PI/2 || this.deg > Math.PI) {
+        if (this.deg > Math.PI/2 + this.mode * Math.PI/2) {
             if (this.deg > Math.PI) {
                 this.deg = 0
                 this.scale = 0
+                this.mode = 0
             }
             else {
                 this.deg = Math.PI/2
                 this.scale = 1
+                this.mode = 1
             }
             stopcb()
         }
@@ -54,6 +57,7 @@ class Animator {
     private interval : number
     start (updatecb : Function) {
         if (!this.started) {
+            this.started = true
             this.interval = setInterval(() => {
                 updatecb()
             }, 75)
